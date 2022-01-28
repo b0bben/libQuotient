@@ -2836,8 +2836,8 @@ QString Room::Private::calculateDisplayname() const
     for (auto u : shortlist) {
         if (u == nullptr || isLocalUser(u))
             break;
-        // Only disambiguate if the room is not empty
-        names.push_back(u->displayname(emptyRoom ? nullptr : q));
+        // make sure displayname is unfurled by getBestKnownName()
+        names.push_back(u->displayname(q));
     }
 
     const auto usersCountExceptLocal =
@@ -2858,8 +2858,9 @@ QString Room::Private::calculateDisplayname() const
         return namesList;
 
     // (Spec extension) Invited users
-    if (!usersInvited.empty())
-        return tr("Empty room (invited: %1)").arg(namesList);
+    if (!usersInvited.empty()) {
+        return names.first();
+    }
 
     // Users that previously left the room
     if (!membersLeft.isEmpty())

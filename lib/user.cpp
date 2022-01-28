@@ -234,16 +234,13 @@ QString User::displayname(const Room* room) const
     if (room)
         return room->roomMembername(this);
 
-    if (auto n = name(); !n.isEmpty())
-        return n;
-
-    return d->id;
+    return name(); //always use human-readable names instead of Matrix IDs
 }
 
 QString User::fullName(const Room* room) const
 {
     const auto displayName = name(room);
-    return displayName.isEmpty() ? id() : (displayName % " (" % id() % ')');
+    return displayName.isEmpty() ? id() : displayName; // don't include Matrix ID in fullname
 }
 
 QString User::bridged() const { return {}; }
